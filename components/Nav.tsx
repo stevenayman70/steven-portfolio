@@ -13,16 +13,13 @@ export default function Nav() {
     <header className="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur-md border-b border-black/5 shadow-sm">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
 
-        {/* Left — photo + name (home link) */}
-        <Link href="/" className="flex items-center gap-2.5 group">
+        {/* Left — logo (home link) */}
+        <Link href="/" className="flex items-center group">
           <img
-            src="/me.jpeg"
+            src="/steven ayman logo.png"
             alt="Steven Ayman"
-            className="w-9 h-9 rounded-full object-cover object-top ring-2 ring-orange/30 shrink-0"
+            className="h-10 w-auto object-contain"
           />
-          <span className="font-black text-base text-dark group-hover:text-orange transition-colors whitespace-nowrap">
-            Steven Ayman
-          </span>
         </Link>
 
         {/* Center — nav links */}
