@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-cream text-dark antialiased;
+    font-family: var(--font-poppins), sans-serif;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { @apply bg-cream; }
+  ::-webkit-scrollbar-thumb { @apply bg-cream-dark rounded-full; }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-orange ring-offset-2;
+  }
+}
+
+@layer components {
+  /* Pill nav active */
+  .nav-pill-active {
+    @apply bg-orange text-white;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+  }
+  .badge-ai        { @apply bg-teal-50   text-teal-700   border border-teal-200; }
+  .badge-n8n       { @apply bg-orange-50 text-orange-700 border border-orange-200; }
+  .badge-serenoil  { @apply bg-green-50  text-green-700  border border-green-200; }
+  .badge-robotics  { @apply bg-purple-50 text-purple-700 border border-purple-200; }
+  .badge-web       { @apply bg-blue-50   text-blue-700   border border-blue-200; }
+  .badge-youtube   { @apply bg-red-50    text-red-700    border border-red-200; }
+  .badge-done  { @apply bg-green-50  text-green-700  border border-green-200; }
+  .badge-wip   { @apply bg-amber-50  text-amber-700  border border-amber-200; }
+  .badge-case  { @apply bg-blue-50   text-blue-700   border border-blue-200; }
+
+  /* Tag */
+  .tag {
+    @apply inline-block px-2.5 py-0.5 text-xs text-muted bg-white border border-gray-200 rounded-full;
+  }
+}
+
+/* Prose overrides for project detail */
+.prose {
+  --tw-prose-body:      #374151;
+  --tw-prose-headings:  #1a1a1a;
+  --tw-prose-links:     #f97316;
+  --tw-prose-bold:      #1a1a1a;
+  --tw-prose-code:      #f97316;
+  --tw-prose-pre-bg:    #1a1a1a;
+  --tw-prose-pre-code:  #f0ebe3;
+  --tw-prose-quotes:    #6b7280;
+  --tw-prose-hr:        #e5e7eb;
+}
