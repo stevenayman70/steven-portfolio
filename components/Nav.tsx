@@ -18,9 +18,9 @@ export default function Nav() {
           <img
             src="/me.jpeg"
             alt="Steven Ayman"
-            className="w-9 h-9 rounded-full object-cover object-top ring-2 ring-orange/30"
+            className="w-9 h-9 rounded-full object-cover object-top ring-2 ring-orange/30 shrink-0"
           />
-          <span className="font-black text-base text-dark group-hover:text-orange transition-colors">
+          <span className="font-black text-base text-dark group-hover:text-orange transition-colors whitespace-nowrap">
             Steven Ayman
           </span>
         </Link>
