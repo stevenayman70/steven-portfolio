@@ -2,7 +2,6 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 
 export default function Nav() {
   const pathname = usePathname();
@@ -14,16 +13,16 @@ export default function Nav() {
     <header className="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur-md border-b border-black/5 shadow-sm">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
 
-        {/* Left — logo (home link) */}
-        <Link href="/" className="flex items-center group">
-          <Image
-            src="/steven ayman logo.png"
+        {/* Left — photo + name (home link) */}
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <img
+            src="/me.jpeg"
             alt="Steven Ayman"
-            width={120}
-            height={48}
-            className="h-10 w-auto object-contain"
-            priority
+            className="w-9 h-9 rounded-full object-cover object-top ring-2 ring-orange/30"
           />
+          <span className="font-black text-base text-dark group-hover:text-orange transition-colors">
+            Steven Ayman
+          </span>
         </Link>
 
         {/* Center — nav links */}
