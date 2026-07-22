@@ -41,12 +41,20 @@ export default function Footer() {
             <p className="mt-4 text-cream/60 max-w-sm">
               Open to collaborations, freelance work, and interesting projects.
             </p>
-            <a
-              href="mailto:stevenayman1111@gmail.com"
-              className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-orange hover:bg-orange-dark text-white font-bold rounded-full transition-colors"
-            >
-              stevenayman1111@gmail.com
-            </a>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                href="mailto:stevenayman1111@gmail.com"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-orange hover:bg-orange-dark text-white font-bold rounded-full transition-colors"
+              >
+                stevenayman1111@gmail.com
+              </a>
+              <a
+                href="tel:+201200717135"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 text-cream font-bold rounded-full transition-colors"
+              >
+                +20 120 071 7135
+              </a>
+            </div>
           </div>
           <div className="md:text-right">
             <div className="flex gap-3 md:justify-end">
