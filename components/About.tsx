@@ -6,7 +6,7 @@ const FACTS = [
 ];
 
 const TOOLS = [
-  'Claude API', 'n8n', 'Python', 'Node.js', 'Next.js',
+  'Claude API', 'Claude Code', 'Codex', 'n8n', 'Python', 'Node.js', 'Next.js',
   'Supabase', 'ROS 2', 'MATLAB', 'Make.com', 'Telegram API',
   'Remotion', 'Playwright', 'OpenAI', 'React', 'TypeScript',
 ];
