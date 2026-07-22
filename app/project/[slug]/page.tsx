@@ -7,14 +7,15 @@ import { CATEGORY_META, STATUS_META } from '@/lib/types';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 
-interface Props { params: { slug: string } }
+interface Props { params: Promise<{ slug: string }> }
 
 export async function generateStaticParams() {
   const projects = await getProjects();
   return projects.map(p => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const project = await getProject(params.slug);
   if (!project) return { title: 'Not Found' };
   return { title: `${project.title} — Steven Ayman`, description: project.short_desc };
@@ -26,7 +27,8 @@ function toYouTubeEmbed(url: string | null): string | null {
   return m ? `https://www.youtube.com/embed/${m[1]}` : null;
 }
 
-export default async function ProjectPage({ params }: Props) {
+export default async function ProjectPage(props: Props) {
+  const params = await props.params;
   const project = await getProject(params.slug);
   if (!project) notFound();
 
