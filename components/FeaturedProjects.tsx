@@ -87,7 +87,7 @@ export default function FeaturedProjects({ projects }: Props) {
         {/* Mobile CTA */}
         <div className="mt-8 text-center md:hidden">
           <a href="/projects" className="inline-flex items-center gap-2 px-6 py-3 bg-dark text-cream font-bold rounded-full hover:bg-dark/80 transition-colors">
-            View all {projects.length > 0 ? '33' : ''} projects →
+            View all projects →
           </a>
         </div>
       </div>

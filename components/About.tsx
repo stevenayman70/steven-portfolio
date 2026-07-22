@@ -44,6 +44,11 @@ export default function About() {
                 by Claude, to automatic Bosta shipment creation on payment confirmation.
               </p>
               <p>
+                My research on self-balancing robot stabilization — co-authored with Mohamed Alkalla
+                and Ayman Nada — was accepted and presented at <strong className="text-dark">IEEE CoDIT 2026</strong> in
+                Bari, Italy.
+              </p>
+              <p>
                 Every project I share here is deployed and solving a real problem. No toy demos.
               </p>
             </div>
