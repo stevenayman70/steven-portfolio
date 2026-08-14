@@ -1,94 +1,56 @@
 import Link from 'next/link';
 import type { Project } from '@/lib/types';
-import { CATEGORY_META, STATUS_META } from '@/lib/types';
+import { CATEGORY_META } from '@/lib/types';
 
 interface Props { projects: Project[] }
 
 export default function FeaturedProjects({ projects }: Props) {
   if (projects.length === 0) return null;
 
-  const ArrowIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-4 h-4">
-      <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
-    </svg>
-  );
-
   return (
-    <section className="bg-cream py-16">
-      <div className="max-w-6xl mx-auto px-6">
-
-        {/* Header */}
-        <div className="flex items-end justify-between mb-10">
+    <section id="work" className="bg-mist py-24 sm:py-32">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="mb-14 grid gap-6 md:grid-cols-2 md:items-end">
           <div>
-            <p className="text-orange font-bold text-sm uppercase tracking-widest mb-2">Selected</p>
-            <h2 className="text-5xl md:text-6xl font-black text-dark">Featured Work</h2>
+            <p className="eyebrow">Selected systems</p>
+            <h2 className="mt-4 text-4xl font-semibold tracking-[-.05em] text-ink sm:text-6xl">Proof, not promises.</h2>
           </div>
-          <a
-            href="/projects"
-            className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 border border-black/10 rounded-full text-sm font-semibold text-dark hover:border-orange hover:text-orange transition-colors"
-          >
-            View all projects →
-          </a>
+          <div className="md:justify-self-end">
+            <p className="max-w-lg text-lg leading-8 text-slate">A selection of AI systems designed around real operational problems and measurable outcomes.</p>
+            <Link href="/projects" className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-ink transition hover:text-green">View all projects <span>↗</span></Link>
+          </div>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((p, i) => {
-            const cat    = CATEGORY_META[p.category];
-            const catKey = p.category === 'ai-automation' ? 'ai' : p.category === 'youtube' ? 'youtube' : p.category;
-            const stsKey = p.status === 'Completed' ? 'done' : p.status === 'In Progress' ? 'wip' : 'case';
-
+        <div className="flex flex-col divide-y divide-ink/10 overflow-hidden rounded-[2rem] border border-ink/10 bg-white">
+          {projects.map((project, index) => {
+            const category = CATEGORY_META[project.category];
+            const statusKey = project.status === 'Completed' ? 'done' : project.status === 'In Progress' ? 'wip' : 'case';
             return (
               <Link
-                key={p.id}
-                href={`/project/${p.slug}`}
-                className="group bg-white rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
-                style={{ animationDelay: `${i * 60}ms` }}
+                key={project.id}
+                href={`/project/${project.slug}`}
+                className="group flex flex-col gap-4 px-6 py-7 transition duration-300 hover:bg-mist sm:flex-row sm:items-center sm:gap-8 sm:px-10 sm:py-8"
               >
-                {/* Thumbnail */}
-                <div className="aspect-video overflow-hidden bg-cream-dark">
-                  {p.thumbnail_url ? (
-                    <img src={p.thumbnail_url} alt={p.title} loading="lazy"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-5xl bg-gradient-to-br from-cream to-cream-dark">
-                      {cat.icon}
+                <span className="flex-shrink-0 self-start rounded-full bg-ink px-3 py-1.5 font-mono text-xs text-lime sm:self-center">System 0{index + 1}</span>
+
+                <div className="min-w-0 flex-1">
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    <span className={`badge ${category.badgeClass}`}>{category.icon} {category.label}</span>
+                    <span className={`badge badge-${statusKey}`}>{project.status}</span>
+                  </div>
+                  <h3 className="text-2xl font-semibold leading-tight tracking-[-.035em] text-ink">{project.title}</h3>
+                  <p className="mt-3 max-w-2xl text-sm leading-7 text-slate sm:text-base">{project.short_desc}</p>
+                  {(project.tech_stack ?? []).length > 0 && (
+                    <div className="mt-5 flex flex-wrap gap-3">
+                      {(project.tech_stack ?? []).slice(0, 5).map(tool => <span key={tool} className="font-mono text-[11px] text-slate">{tool}</span>)}
                     </div>
                   )}
                 </div>
 
-                {/* Body */}
-                <div className="p-5">
-                  <div className="flex gap-1.5 mb-3">
-                    <span className={`badge badge-${catKey}`}>{cat.icon} {cat.label}</span>
-                    <span className={`badge badge-${stsKey}`}>{p.status}</span>
-                  </div>
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-dark text-base leading-snug">{p.title}</h3>
-                      <p className="text-muted text-sm mt-1 line-clamp-2 leading-relaxed">{p.short_desc}</p>
-                    </div>
-                    <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-orange text-white rounded-full group-hover:bg-orange-dark transition-colors mt-0.5">
-                      <ArrowIcon />
-                    </div>
-                  </div>
-                  {(p.tech_stack ?? []).length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mt-3">
-                      {(p.tech_stack ?? []).slice(0, 3).map(t => <span key={t} className="tag">{t}</span>)}
-                      {(p.tech_stack ?? []).length > 3 && <span className="tag">+{p.tech_stack.length - 3}</span>}
-                    </div>
-                  )}
-                </div>
+                <span className="hidden h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-ink text-lg text-white transition duration-300 group-hover:rotate-45 group-hover:bg-lime group-hover:text-ink sm:flex">↗</span>
               </Link>
             );
           })}
-        </div>
-
-        {/* Mobile CTA */}
-        <div className="mt-8 text-center md:hidden">
-          <a href="/projects" className="inline-flex items-center gap-2 px-6 py-3 bg-dark text-cream font-bold rounded-full hover:bg-dark/80 transition-colors">
-            View all projects →
-          </a>
         </div>
       </div>
     </section>

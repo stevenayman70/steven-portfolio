@@ -25,3 +25,8 @@ Thumbs.db
 
 # Misc
 *.log
+Claudflare.txt
+*.txt
+.edge-preview/
+portfolio-check.png
+scratch_*.mjs

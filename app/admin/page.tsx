@@ -254,10 +254,31 @@ function ProjectForm({ initial, onSave, onCancel, showToast }: FormProps) {
 // ── Project Table ────────────────────────────────────────────
 interface TableProps { projects: Project[]; onEdit: (p: Project) => void; onDelete: (p: Project) => void; onAdd: () => void }
 
+type CatFilter    = 'all' | Category;
+type StatusFilter = 'all' | Status;
+
 function ProjectTable({ projects, onEdit, onDelete, onAdd }: TableProps) {
-  const catKey    = (c: Category) => c === 'ai-automation' ? 'ai' : c === 'youtube' ? 'youtube' : c;
-  const statusKey = (s: Status)   => s === 'Completed' ? 'done' : s === 'In Progress' ? 'wip' : 'case';
+  const [query,      setQuery]      = useState('');
+  const [catFilter,  setCatFilter]  = useState<CatFilter>('all');
+  const [statFilter, setStatFilter] = useState<StatusFilter>('all');
+  const [featOnly,   setFeatOnly]   = useState(false);
+
+  const statusKey = (s: Status) => s === 'Completed' ? 'done' : s === 'In Progress' ? 'wip' : 'case';
   const stats = { total: projects.length, done: projects.filter(p => p.status === 'Completed').length, wip: projects.filter(p => p.status === 'In Progress').length, feat: projects.filter(p => p.featured).length };
+
+  const categoryEntries = Object.entries(CATEGORY_META) as [Category, typeof CATEGORY_META[Category]][];
+  const q = query.trim().toLowerCase();
+
+  const filtered = projects.filter(p => {
+    if (catFilter !== 'all' && p.category !== catFilter) return false;
+    if (statFilter !== 'all' && p.status !== statFilter) return false;
+    if (featOnly && !p.featured) return false;
+    if (q && !p.title.toLowerCase().includes(q) && !p.slug.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  const hasActiveFilters = catFilter !== 'all' || statFilter !== 'all' || featOnly || q.length > 0;
+  function clearFilters() { setQuery(''); setCatFilter('all'); setStatFilter('all'); setFeatOnly(false); }
 
   return (
     <div>
@@ -280,10 +301,74 @@ function ProjectTable({ projects, onEdit, onDelete, onAdd }: TableProps) {
         ))}
       </div>
 
+      {/* Filter bar */}
+      <div className="bg-white border border-black/5 rounded-2xl p-4 shadow-sm mb-4 flex flex-col gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted text-sm">🔍</span>
+            <input
+              value={query} onChange={e => setQuery(e.target.value)}
+              placeholder="Search by title or slug…"
+              className="w-full pl-9 pr-3 py-2 bg-cream border border-black/10 rounded-xl text-dark text-sm focus:outline-none focus:ring-2 focus:ring-orange"
+            />
+          </div>
+          <select value={statFilter} onChange={e => setStatFilter(e.target.value as StatusFilter)}
+            className="px-3 py-2 bg-cream border border-black/10 rounded-xl text-dark text-sm focus:outline-none focus:ring-2 focus:ring-orange sm:w-44">
+            <option value="all">All Statuses</option>
+            <option value="Completed">Completed</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Case Study">Case Study</option>
+          </select>
+          <button
+            onClick={() => setFeatOnly(v => !v)}
+            className={`px-4 py-2 text-sm font-semibold rounded-xl border whitespace-nowrap transition-colors ${
+              featOnly ? 'bg-orange/10 border-orange text-orange' : 'bg-cream border-black/10 text-muted hover:text-dark'
+            }`}
+          >
+            ★ Featured only
+          </button>
+          {hasActiveFilters && (
+            <button onClick={clearFilters} className="px-4 py-2 text-sm font-semibold text-muted hover:text-dark whitespace-nowrap">
+              Clear
+            </button>
+          )}
+        </div>
+
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            onClick={() => setCatFilter('all')}
+            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+              catFilter === 'all' ? 'bg-dark text-cream border-dark' : 'bg-cream text-muted border-black/10 hover:text-dark'
+            }`}
+          >
+            All <span className="opacity-70">{projects.length}</span>
+          </button>
+          {categoryEntries.map(([key, meta]) => {
+            const count = projects.filter(p => p.category === key).length;
+            return (
+              <button
+                key={key}
+                onClick={() => setCatFilter(key)}
+                className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                  catFilter === key ? 'bg-dark text-cream border-dark' : 'bg-cream text-muted border-black/10 hover:text-dark'
+                }`}
+              >
+                {meta.icon} {meta.label} <span className="opacity-70">{count}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       <div className="bg-white border border-black/5 rounded-2xl overflow-hidden shadow-sm">
-        <div className="px-5 py-4 border-b border-black/5"><h3 className="font-bold text-sm text-dark">All Projects</h3></div>
+        <div className="px-5 py-4 border-b border-black/5 flex items-center justify-between">
+          <h3 className="font-bold text-sm text-dark">All Projects</h3>
+          <span className="text-xs text-muted font-medium">{filtered.length} of {projects.length}</span>
+        </div>
         {projects.length === 0 ? (
           <div className="py-16 text-center text-muted text-sm font-medium">No projects yet. Add your first one!</div>
+        ) : filtered.length === 0 ? (
+          <div className="py-16 text-center text-muted text-sm font-medium">No projects match these filters.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
@@ -295,7 +380,7 @@ function ProjectTable({ projects, onEdit, onDelete, onAdd }: TableProps) {
                 </tr>
               </thead>
               <tbody>
-                {projects.map(p => (
+                {filtered.map(p => (
                   <tr key={p.id} className="border-b border-black/5 hover:bg-cream/50 transition-colors">
                     <td className="px-5 py-3.5">
                       {p.thumbnail_url
@@ -306,7 +391,7 @@ function ProjectTable({ projects, onEdit, onDelete, onAdd }: TableProps) {
                       <div className="font-bold text-sm text-dark">{p.title}</div>
                       <div className="text-xs text-muted font-mono mt-0.5">{p.slug}</div>
                     </td>
-                    <td className="px-5 py-3.5"><span className={`badge badge-${catKey(p.category)}`}>{CATEGORY_META[p.category].icon} {CATEGORY_META[p.category].label}</span></td>
+                    <td className="px-5 py-3.5"><span className={`badge ${CATEGORY_META[p.category].badgeClass}`}>{CATEGORY_META[p.category].icon} {CATEGORY_META[p.category].label}</span></td>
                     <td className="px-5 py-3.5"><span className={`badge badge-${statusKey(p.status)}`}>{p.status}</span></td>
                     <td className="px-5 py-3.5">{p.featured ? <span className="w-2 h-2 bg-orange rounded-full inline-block" /> : <span className="text-muted">—</span>}</td>
                     <td className="px-5 py-3.5">

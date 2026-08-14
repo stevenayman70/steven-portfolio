@@ -1,9 +1,11 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Metadata } from 'next';
 import { marked } from 'marked';
 import { getProject, getProjects } from '@/lib/supabase';
 import { CATEGORY_META, STATUS_META } from '@/lib/types';
+import { projectImage } from '@/lib/project-images';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 
@@ -18,7 +20,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
   const project = await getProject(params.slug);
   if (!project) return { title: 'Not Found' };
-  return { title: `${project.title} — Steven Ayman`, description: project.short_desc };
+  return { title: `${project.title} — Steven Ayman Tawfik`, description: project.short_desc };
 }
 
 function toYouTubeEmbed(url: string | null): string | null {
@@ -33,12 +35,10 @@ export default async function ProjectPage(props: Props) {
   if (!project) notFound();
 
   const cat       = CATEGORY_META[project.category];
+  const thumbnail = projectImage(project.slug, project.thumbnail_url);
   const embedUrl  = toYouTubeEmbed(project.youtube_url);
   const htmlBody  = project.long_desc ? await marked.parse(project.long_desc) : null;
 
-  const catBadge = project.category === 'ai-automation' ? 'ai'
-    : project.category === 'youtube' ? 'youtube'
-    : project.category;
   const statusBadge = project.status === 'Completed' ? 'done'
     : project.status === 'In Progress' ? 'wip'
     : 'case';
@@ -58,9 +58,12 @@ export default async function ProjectPage(props: Props) {
           </Link>
 
           {/* Hero image */}
-          {project.thumbnail_url ? (
-            <img src={project.thumbnail_url} alt={project.title}
-              className="w-full aspect-video object-cover rounded-3xl shadow-lg mb-8" />
+          {thumbnail ? (
+            thumbnail.startsWith('/') ? (
+              <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-3xl shadow-lg"><Image src={thumbnail} alt={project.title} fill priority sizes="(min-width: 1024px) 1024px, 100vw" className="object-cover" /></div>
+            ) : (
+              <img src={thumbnail} alt={project.title} className="mb-8 aspect-video w-full rounded-3xl object-cover shadow-lg" />
+            )
           ) : (
             <div className="w-full aspect-video flex items-center justify-center rounded-3xl bg-white shadow-sm border border-black/5 text-7xl mb-8">
               {cat.icon}
@@ -69,7 +72,7 @@ export default async function ProjectPage(props: Props) {
 
           {/* Badges */}
           <div className="flex gap-2 flex-wrap mb-4">
-            <span className={`badge badge-${catBadge}`}>{cat.icon} {cat.label}</span>
+            <span className={`badge ${cat.badgeClass}`}>{cat.icon} {cat.label}</span>
             <span className={`badge badge-${statusBadge}`}>{project.status}</span>
           </div>
 

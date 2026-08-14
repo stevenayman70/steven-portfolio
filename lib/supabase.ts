@@ -14,7 +14,10 @@ export async function getProjects(): Promise<Project[]> {
       .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false });
     if (error) throw error;
-    return (data as Project[]) ?? [];
+    return ((data as Project[]) ?? []).filter(project =>
+      !['robotics', 'research'].includes(project.category as string) &&
+      !/robot|makertronics|maker tronics|mechatronic|control system/i.test(`${project.title} ${project.short_desc}`)
+    );
   } catch {
     return [];
   }
@@ -28,7 +31,9 @@ export async function getProject(slug: string): Promise<Project | null> {
       .eq('slug', slug)
       .single();
     if (error) return null;
-    return data as Project;
+    const project = data as Project;
+    if (['robotics', 'research'].includes(project.category as string) || /robot|makertronics|maker tronics|mechatronic|control system/i.test(`${project.title} ${project.short_desc}`)) return null;
+    return project;
   } catch {
     return null;
   }

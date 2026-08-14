@@ -11,27 +11,23 @@ interface Props { initialProjects: Project[] }
 type Filter = 'all' | Category;
 
 const FILTERS: { value: Filter; label: string; icon: string }[] = [
-  { value: 'all',           label: 'All',          icon: '' },
-  { value: 'ai-automation', label: 'AI Automation', icon: '🤖' },
-  { value: 'n8n',           label: 'n8n',           icon: '⚙️' },
-  { value: 'serenoil',      label: 'Serenoil',      icon: '🌿' },
-  { value: 'robotics',      label: 'Robotics',      icon: '🦾' },
-  { value: 'web',           label: 'Web Dev',        icon: '🌐' },
-  { value: 'youtube',       label: 'YouTube',        icon: '📹' },
+  { value: 'all', label: 'All', icon: '' },
+  ...(Object.entries(CATEGORY_META) as [Category, typeof CATEGORY_META[Category]][])
+    .map(([value, meta]) => ({ value, label: meta.label, icon: meta.icon })),
 ];
+
+const ALL_CATEGORIES = Object.keys(CATEGORY_META) as Category[];
 
 export default function ProjectsClient({ initialProjects }: Props) {
   const searchParams = useSearchParams();
   const [active, setActive] = useState<Filter>(() => {
     const cat = searchParams.get('category');
-    const valid: Filter[] = ['all','ai-automation','n8n','serenoil','robotics','web','youtube'];
-    return valid.includes(cat as Filter) ? (cat as Filter) : 'all';
+    return ALL_CATEGORIES.includes(cat as Category) ? (cat as Filter) : 'all';
   });
 
   useEffect(() => {
     const cat = searchParams.get('category');
-    const valid: Filter[] = ['all','ai-automation','n8n','serenoil','robotics','web','youtube'];
-    if (cat && valid.includes(cat as Filter)) setActive(cat as Filter);
+    if (cat && ALL_CATEGORIES.includes(cat as Category)) setActive(cat as Filter);
   }, [searchParams]);
 
   const filtered = active === 'all'
@@ -76,16 +72,16 @@ export default function ProjectsClient({ initialProjects }: Props) {
           ))}
         </div>
 
-        {/* Grid */}
+        {/* List */}
         {filtered.length === 0 ? (
           <div className="text-center py-20 text-muted">
             <div className="text-5xl mb-4">🔍</div>
             <p className="text-sm font-medium">No projects in this category yet.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+          <div className="flex flex-col gap-3">
             {filtered.map((p, i) => (
-              <div key={p.id} className="animate-fade-up" style={{ animationDelay: `${i * 60}ms` }}>
+              <div key={p.id} className="animate-fade-up" style={{ animationDelay: `${i * 40}ms` }}>
                 <ProjectCard project={p} index={i} />
               </div>
             ))}

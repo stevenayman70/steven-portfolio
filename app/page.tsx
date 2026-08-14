@@ -2,6 +2,8 @@ import Nav from '@/components/Nav';
 import Hero from '@/components/Hero';
 import SkillCards from '@/components/SkillCards';
 import About from '@/components/About';
+import Process from '@/components/Process';
+import Background from '@/components/Background';
 import FeaturedProjects from '@/components/FeaturedProjects';
 import Footer from '@/components/Footer';
 import { getProjects } from '@/lib/supabase';
@@ -18,9 +20,11 @@ export default async function Home() {
       <Nav />
       <main>
         <Hero totalProjects={allProjects.length} completedProjects={totalDone} />
-        <SkillCards />
         <About />
+        <Background />
+        <Process />
         <FeaturedProjects projects={featured} />
+        <SkillCards />
       </main>
       <Footer />
     </>

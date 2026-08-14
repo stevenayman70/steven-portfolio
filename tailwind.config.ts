@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import typography from '@tailwindcss/typography';
 
 const config: Config = {
   content: [
@@ -20,26 +21,30 @@ const config: Config = {
         canvas: '#faf8f5',
         dark:   '#1a1a1a',
         muted:  '#6b7280',
+        ink: '#101613',
+        mist: '#f1f3ed',
+        slate: '#626b65',
+        lime: '#b7ff5a',
+        green: '#347a53',
 
         // Orange accent
         orange: {
-          DEFAULT: '#f97316',
-          dark:    '#ea580c',
-          light:   '#fff7ed',
-          border:  '#fed7aa',
+          DEFAULT: '#347a53',
+          dark:    '#285f41',
+          light:   '#edf7f0',
+          border:  '#b8dac5',
         },
 
         // Category colors (kept for badges on detail page)
         ai:       '#0d9488',
-        n8n:      '#f97316',
+        n8n:      '#347a53',
         serenoil: '#16a34a',
-        robotics: '#7c3aed',
         web:      '#2563eb',
         yt:       '#dc2626',
 
         // Status
         done:  '#16a34a',
-        wip:   '#d97706',
+        wip:   '#347a53',
         study: '#2563eb',
 
         // Admin surfaces (keep slightly dark for contrast)
@@ -68,7 +73,7 @@ const config: Config = {
     },
   },
   plugins: [
-    require('@tailwindcss/typography'),
+    typography,
   ],
 };
 
